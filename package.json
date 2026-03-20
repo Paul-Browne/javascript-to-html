@@ -1,11 +1,43 @@
 {
-  "name": "javascript-to-html-v4-generator",
+  "name": "javascript-to-html",
+  "version": "1.1.2",
+  "author": "Paul Browne",
+  "description": "A simple library for easily converting JavaScript to HTML.",
   "type": "module",
+  "module": "./dist/index.js",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "homepage": "https://ht.js.org",
+  "sideEffects": false,
+  "keywords": [
+    "html",
+    "javascript",
+    "javascript-to-html",
+    "javascript-to-html-converter",
+    "javascript-to-html-generator"
+  ],
   "scripts": {
     "generate:attrs": "node scripts/generate-attributes.js",
     "build:types": "node scripts/build-types.js",
     "build:package": "node scripts/build-package.js",
     "types": "npm run generate:attrs && npm run build:types"
+  },  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paul-browne/javascript-to-html.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paul-browne/javascript-to-html/issues"
+  },  
+  "files": [
+    "dist/**/*"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "devDependencies": {
     "esbuild": "^0.27.4",

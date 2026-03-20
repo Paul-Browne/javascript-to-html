@@ -2,6 +2,12 @@
 
 A library for easily creating HTML in JavaScript. Best used with the [vite plugin html pages](https://www.npmjs.com/package/vite-plugin-html-pages)
 
+```bash
+npm install javascript-to-html
+```
+
+[DOCS](https://ht.js.org)
+
 ```js
 import { html, head, meta, link, title, body, h1, p, a, img, button } from "javascript-to-html"
 
