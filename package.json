@@ -1,0 +1,14 @@
+{
+  "name": "javascript-to-html-v4-generator",
+  "type": "module",
+  "scripts": {
+    "generate:attrs": "node scripts/generate-attributes.js",
+    "build:types": "node scripts/build-types.js",
+    "build:package": "node scripts/build-package.js",
+    "types": "npm run generate:attrs && npm run build:types"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.4",
+    "typescript": "^5.7.3"
+  }
+}
