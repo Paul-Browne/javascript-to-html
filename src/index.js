@@ -1,41 +1,53 @@
 import { VOID_TAGS, TAG_NAMES } from './tags.js';
-
-const normalizeArgs = args => {
+  
+function normalizeArgs(args) {
     const content = [];
-    let attributes = {};
+    let attrs = {};
 
     for (const arg of args) {
         if (arg != null && typeof arg === 'object' && !Array.isArray(arg)) {
-            attributes = { ...attributes, ...arg };
+            attrs = { ...attrs, ...arg };
         } else {
-            content.push(arg)
+            content.push(arg);
         }
     }
 
-    return [content, attributes];
+    return { content, attrs };
 }
 
-const renderAttributes = attributes => Object.keys(attributes).map(key => {
-    const value = attributes[key];
+function renderAttributes(attributes) {
+    return Object.keys(attributes)
+        .map((key) => {
+            const value = attributes[key];
 
-    if (typeof value === 'boolean') {
-        return value ? ` ${key}` : '';
-    }
+            if (typeof value === 'boolean') {
+                return value ? ` ${key}` : '';
+            }
 
-    return ` ${key}="${String(value).replace(/"/g, '&#34;')}"`;
+            return ` ${key}="${String(value).replace(/"/g, '&#34;')}"`;
+        })
+        .join('');
+}
 
-}).join('');
+function renderContent(content) {
+    return content.join('');
+}
 
-const createTag = tagName => {
+function createTag(tagName) {
     if (tagName === 'fragment') {
-        return (...args) => normalizeArgs(args)[0].join('');
+        return (...args) => renderContent(normalizeArgs(args).content);
     }
 
     return (...args) => {
-        const [content, attributes] = normalizeArgs(args);
-        const attrs = renderAttributes(attributes);
-        return `<${tagName}${attrs}>${VOID_TAGS.includes(tagName) ? '' : `${content.join('')}</${tagName}>`}`;
+        const { content, attrs } = normalizeArgs(args);
+        const attributes = renderAttributes(attrs);
+        const inner = renderContent(content);
 
+        if (VOID_TAGS.includes(tagName)) {
+        return `<${tagName}${attributes}>`;
+        }
+
+        return `<${tagName}${attributes}>${inner}</${tagName}>`;
     };
 }
 
@@ -50,5 +62,5 @@ export const [
     pre, progress, q, rp, rt, ruby, s, samp, script, section, select, slot,
     small, span, strong, style, sub, summary, sup, table, tbody, td,
     template, textarea, tfoot, th, thead, time, title, tr, u, ul, video,
-    fragment
+    fragment,
 ] = TAG_NAMES.map(createTag);
