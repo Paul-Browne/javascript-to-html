@@ -8,6 +8,8 @@ npm install javascript-to-html
 
 [DOCS](https://ht.js.org)
 
+##### src/index.ht.js
+
 ```js
 import { html, head, meta, link, title, body, h1, p, a, img, button } from "javascript-to-html"
 
@@ -37,6 +39,8 @@ export default () => html({ lang: "en" },
 ```
 
 Becomes
+
+##### dist/index.html
 
 ```html
 <html lang="en">
