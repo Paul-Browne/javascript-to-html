@@ -1,7 +1,7 @@
 // AUTO-GENERATED — DO NOT EDIT
 
 export type HtmlText = string | number | boolean | null | undefined;
-export type HtmlChild = HtmlText;
+export type HtmlChild = HtmlText | HtmlChildren;
 export type HtmlChildren = HtmlChild[];
 export type ParentArgs<T> = [attrs?: T, ...children: HtmlChildren] | HtmlChildren;
 

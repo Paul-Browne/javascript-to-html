@@ -1,5 +1,16 @@
 import { VOID_TAGS, TAG_NAMES } from './tags.js';
-  
+
+function appendContent(content, arg) {
+    if (Array.isArray(arg)) {
+        for (const item of arg) {
+            appendContent(content, item);
+        }
+        return;
+    }
+
+    content.push(arg);
+}
+
 function normalizeArgs(args) {
     const content = [];
     let attrs = {};
@@ -8,7 +19,7 @@ function normalizeArgs(args) {
         if (arg != null && typeof arg === 'object' && !Array.isArray(arg)) {
             attrs = { ...attrs, ...arg };
         } else {
-            content.push(arg);
+            appendContent(content, arg);
         }
     }
 
