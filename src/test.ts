@@ -1,4 +1,4 @@
-import { html, head, body, title, h1, button, img, div, p } from '../dist/index.js';
+import { html, head, body, title, h1, button, img, div, p, input } from '../dist/index.js';
 
 const result = html({
         lang: 'en',
@@ -38,5 +38,25 @@ console.log(
         ? 'Pass'
         : 'Fail'
 );
+
+// Nullish attributes are dropped, not stringified.
+const check = (label, actual, expected) =>
+    console.log(actual === expected ? 'Pass' : `Fail (${label}): ${actual}`);
+
+check('undefined attr', div({ class: undefined }, 'x'), '<div>x</div>');
+check('null attr', div({ class: null }, 'x'), '<div>x</div>');
+check(
+    'conditional attr',
+    div({ class: false ? 'is-active' : undefined, id: 'a' }, 'x'),
+    '<div id="a">x</div>',
+);
+
+// ...but an explicitly empty or zero value is meaningful and kept.
+check('empty string attr', div({ class: '' }, 'x'), '<div class="">x</div>');
+check('zero attr', div({ tabindex: 0 }, 'x'), '<div tabindex="0">x</div>');
+
+// Booleans keep their existing behaviour: true renders bare, false is dropped.
+check('true attr', input({ disabled: true }), '<input disabled>');
+check('false attr', input({ disabled: false }), '<input>');
 
 console.log(result);

@@ -31,6 +31,15 @@ function renderAttributes(attributes) {
         .map((key) => {
             const value = attributes[key];
 
+            // A nullish value means "no attribute at all". `class: cond ? 'x' : undefined`
+            // is the natural way to write a conditional attribute — and the types already
+            // allow it — so stringifying it into class="undefined" is never what was meant.
+            // An empty string is left alone: `data-flag=""` is a deliberate, meaningful
+            // attribute, and so is a falsy 0.
+            if (value == null) {
+                return '';
+            }
+
             if (typeof value === 'boolean') {
                 return value ? ` ${key}` : '';
             }
