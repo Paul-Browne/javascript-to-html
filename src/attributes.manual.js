@@ -48,7 +48,10 @@ export const GLOBAL_OVERRIDES = {
     description: 'spellcheck attribute',
   },
   popover: {
-    type: 'boolean',
+    // An enumerated attribute, not a boolean one: `popover="auto"`,
+    // `"manual"` and `"hint"` are all valid, and a bare `popover` is
+    // auto. `true` renders the bare form.
+    type: "boolean | 'auto' | 'manual' | 'hint'",
     description: 'popover attribute',
   },
   nonce: {

@@ -3,7 +3,25 @@
 export type HtmlText = string | number | boolean | null | undefined;
 export type HtmlChild = HtmlText | HtmlChildren;
 export type HtmlChildren = HtmlChild[];
-export type ParentArgs<T> = [attrs?: T, ...children: HtmlChildren] | HtmlChildren;
+/**
+ * Arguments to a parent tag: attributes and children, in any order.
+ *
+ * A tag merges every plain object it is passed into its attributes,
+ * wherever the object appears, and treats everything else as a child.
+ * That is what lets a component pass its own attributes through in the
+ * middle of a call — `div({ role }, attrs(rest), ...children)` — so the
+ * type has to allow an attributes object at any position, not just the
+ * first.
+ */
+export type ParentArgs<T> = Array<T | HtmlChild>;
+/**
+ * Arguments to a void tag: attributes only, in any number.
+ *
+ * The same merging applies as for a parent tag, so a component can
+ * pass its own attributes through alongside the caller's. A void tag
+ * renders no content, so there are no children to allow.
+ */
+export type VoidArgs<T> = Array<T>;
 
 export type GlobalAttributes = {
   /** id attribute */
@@ -31,7 +49,7 @@ export type GlobalAttributes = {
   /** spellcheck attribute */
   "spellcheck"?: boolean;
   /** popover attribute */
-  "popover"?: boolean;
+  "popover"?: boolean | 'auto' | 'manual' | 'hint';
   /** nonce attribute */
   "nonce"?: string;
   /** autocapitalize attribute */
@@ -354,20 +372,20 @@ export type VideoAttributes = GlobalAttributes & {
 };
 
 
-export function img(attrs?: ImgAttributes): string;
-export function area(attrs?: AreaAttributes): string;
-export function base(attrs?: BaseAttributes): string;
-export function br(attrs?: GlobalAttributes): string;
-export function col(attrs?: ColAttributes): string;
-export function embed(attrs?: EmbedAttributes): string;
-export function hr(attrs?: GlobalAttributes): string;
-export function input(attrs?: InputAttributes): string;
-export function link(attrs?: LinkAttributes): string;
-export function meta(attrs?: MetaAttributes): string;
-export function param(attrs?: GlobalAttributes): string;
-export function source(attrs?: SourceAttributes): string;
-export function track(attrs?: TrackAttributes): string;
-export function wbr(attrs?: GlobalAttributes): string;
+export function img(...args: VoidArgs<ImgAttributes>): string;
+export function area(...args: VoidArgs<AreaAttributes>): string;
+export function base(...args: VoidArgs<BaseAttributes>): string;
+export function br(...args: VoidArgs<GlobalAttributes>): string;
+export function col(...args: VoidArgs<ColAttributes>): string;
+export function embed(...args: VoidArgs<EmbedAttributes>): string;
+export function hr(...args: VoidArgs<GlobalAttributes>): string;
+export function input(...args: VoidArgs<InputAttributes>): string;
+export function link(...args: VoidArgs<LinkAttributes>): string;
+export function meta(...args: VoidArgs<MetaAttributes>): string;
+export function param(...args: VoidArgs<GlobalAttributes>): string;
+export function source(...args: VoidArgs<SourceAttributes>): string;
+export function track(...args: VoidArgs<TrackAttributes>): string;
+export function wbr(...args: VoidArgs<GlobalAttributes>): string;
 export function a(...args: ParentArgs<AAttributes>): string;
 export function abbr(...args: ParentArgs<GlobalAttributes>): string;
 export function address(...args: ParentArgs<GlobalAttributes>): string;

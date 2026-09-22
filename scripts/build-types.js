@@ -45,7 +45,25 @@ function renderSharedTypes() {
     'export type HtmlText = string | number | boolean | null | undefined;',
     'export type HtmlChild = HtmlText | HtmlChildren;',
     'export type HtmlChildren = HtmlChild[];',
-    'export type ParentArgs<T> = [attrs?: T, ...children: HtmlChildren] | HtmlChildren;',
+    '/**',
+    ' * Arguments to a parent tag: attributes and children, in any order.',
+    ' *',
+    ' * A tag merges every plain object it is passed into its attributes,',
+    ' * wherever the object appears, and treats everything else as a child.',
+    ' * That is what lets a component pass its own attributes through in the',
+    ' * middle of a call — `div({ role }, attrs(rest), ...children)` — so the',
+    ' * type has to allow an attributes object at any position, not just the',
+    ' * first.',
+    ' */',
+    'export type ParentArgs<T> = Array<T | HtmlChild>;',
+    '/**',
+    ' * Arguments to a void tag: attributes only, in any number.',
+    ' *',
+    ' * The same merging applies as for a parent tag, so a component can',
+    ' * pass its own attributes through alongside the caller\'s. A void tag',
+    ' * renders no content, so there are no children to allow.',
+    ' */',
+    'export type VoidArgs<T> = Array<T>;',
     '',
   ].join('\n');
 }
@@ -93,7 +111,7 @@ function renderTagDeclaration(tag, finalTagAttributes) {
   const attrsType = attributesTypeForTag(tag, finalTagAttributes);
 
   if (VOID_TAGS.includes(tag)) {
-    return `export function ${tag}(attrs?: ${attrsType}): string;`;
+    return `export function ${tag}(...args: VoidArgs<${attrsType}>): string;`;
   }
 
   return `export function ${tag}(...args: ParentArgs<${attrsType}>): string;`;
