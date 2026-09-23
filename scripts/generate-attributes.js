@@ -1,5 +1,7 @@
 import ts from 'typescript';
+import { existsSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
+import path from 'node:path';
 import { createRequire } from 'node:module';
 import {
   TAG_ATTRIBUTE_NAMES,
@@ -7,7 +9,27 @@ import {
 } from '../src/attribute-names.js';
 
 const require = createRequire(import.meta.url);
-const DOM_LIB_PATH = require.resolve('typescript/lib/lib.dom.d.ts');
+
+function resolveDomLibPath() {
+  const typescriptRoot = path.dirname(require.resolve('typescript/package.json'));
+  const bundledDomLib = path.join(typescriptRoot, 'lib', 'lib.dom.d.ts');
+
+  if (existsSync(bundledDomLib)) {
+    return bundledDomLib;
+  }
+
+  const platformPackage = `@typescript/typescript-${process.platform}-${process.arch}`;
+  const platformRoot = path.dirname(require.resolve(`${platformPackage}/package.json`));
+  const platformDomLib = path.join(platformRoot, 'lib', 'lib.dom.d.ts');
+
+  if (!existsSync(platformDomLib)) {
+    throw new Error(`Could not find lib.dom.d.ts (looked in ${bundledDomLib} and ${platformDomLib})`);
+  }
+
+  return platformDomLib;
+}
+
+const DOM_LIB_PATH = resolveDomLibPath();
 const OUTPUT_PATH = 'data/attributes.generated.json';
 
 const program = ts.createProgram({
